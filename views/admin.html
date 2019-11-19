@@ -1,0 +1,67 @@
+{{extend './_layouts/home.html'}}
+
+{{block 'title'}}{{'多人博客 - 首页'}}{{/block}}
+
+{{block 'body'}}
+<section class="container">
+  {{include './_partials/settings-nav.html'}}
+  <div class="col-md-5">
+    <div class="subhead">
+      <h2>修改密码</h2>
+    </div>
+    <hr>
+    <form id="setPass">
+      <div class="form-group">
+        <label for="">账号</label>
+        <input type="text" value=" {{ user.email }} " name="email" border="none">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">当前密码</label>
+        <input type="password" class="form-control" name="password" id="exampleInputPassword1" placeholder="">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">新的密码</label>
+        <input type="password" class="form-control" name="password1" id="exampleInputPassword1" placeholder="">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">确认密码</label>
+        <input type="password" class="form-control" name="password2" id="exampleInputPassword1" placeholder="">
+      </div>
+      <button type="submit" class="btn btn-success">保存</button>
+    </form>
+    <div class="subhead">
+      <h2>注销账号</h2>
+      <hr>
+    </div>
+    <div>
+      <p>一旦注销，不可找回，请谨慎操作</p>
+      <button class="btn btn-danger">删除</button>
+    </div>
+    <hr>
+  </div>
+</section>
+<script src="/node_modules/jquery/dist/jquery.js"></script>
+<script>
+  $('#setPass').on('submit', function (e) {
+    //阻止默认行为
+    e.preventDefault();
+    let formData = $(this).serialize();
+    $.ajax({
+      url: '/admin',
+      type: 'post',
+      data: formData,
+      dataType: 'json',
+      success: function (data) {
+        let err_code = data.err_code;
+        if (err_code === 0) {
+          window.alert('修改成功');
+        } else if (err_code === 500) {
+          window.alert('服务器繁忙,请重新修改');
+        } else if (err_code === 1) {
+          window.alert('密码重复,请重新修改');
+        }
+      }
+    })
+  })
+</script>
+{{/block}}
